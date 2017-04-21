@@ -1,0 +1,250 @@
+>>> 2CI2
+                         :-)  G  R  O  M  A  C  S  (-:
+
+              GROningen Mixture of Alchemy and Childrens' Stories
+
+                            :-)  VERSION 4.0.5  (-:
+
+
+      Written by David van der Spoel, Erik Lindahl, Berk Hess, and others.
+       Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+             Copyright (c) 2001-2008, The GROMACS development team,
+            check out http://www.gromacs.org for more information.
+
+         This program is free software; you can redistribute it and/or
+          modify it under the terms of the GNU General Public License
+         as published by the Free Software Foundation; either version 2
+             of the License, or (at your option) any later version.
+
+                               :-)  pdb2gmx  (-:
+
+Option     Filename  Type         Description
+------------------------------------------------------------
+  -f           .pdb  Input        Structure file: gro g96 pdb tpr tpb tpa
+  -o           .gro  Output       Structure file: gro g96 pdb
+  -p       .top.top  Output       Topology file
+  -i       .itp.itp  Output       Include file for topology
+  -n      clean.ndx  Output, Opt. Index file
+  -q      clean.pdb  Output, Opt. Structure file: gro g96 pdb
+
+Option       Type   Value   Description
+------------------------------------------------------
+-[no]h       bool   no      Print help info and quit
+-nice        int    0       Set the nicelevel
+-[no]merge   bool   no      Merge chains into one molecule definition
+-ff          string G43a1   Force field, interactive by default. Use -h for
+                            information.
+-water       enum   spc     Water model to use: with GROMOS we recommend SPC,
+                            with OPLS, TIP4P: spc, spce, tip3p, tip4p, tip5p
+                            or f3c
+-[no]inter   bool   no      Set the next 8 options to interactive
+-[no]ss      bool   no      Interactive SS bridge selection
+-[no]ter     bool   no      Interactive termini selection, iso charged
+-[no]lys     bool   no      Interactive Lysine selection, iso charged
+-[no]arg     bool   no      Interactive Arganine selection, iso charged
+-[no]asp     bool   no      Interactive Aspartic Acid selection, iso charged
+-[no]glu     bool   no      Interactive Glutamic Acid selection, iso charged
+-[no]gln     bool   no      Interactive Glutamine selection, iso neutral
+-[no]his     bool   no      Interactive Histidine selection, iso checking
+                            H-bonds
+-angle       real   135     Minimum hydrogen-donor-acceptor angle for a
+                            H-bond (degrees)
+-dist        real   0.3     Maximum donor-acceptor distance for a H-bond (nm)
+-[no]una     bool   no      Select aromatic rings with united CH atoms on
+                            Phenylalanine, Tryptophane and Tyrosine
+-[no]ignh    bool   yes     Ignore hydrogen atoms that are in the pdb file
+-[no]missing bool   no      Continue when atoms are missing, dangerous
+-[no]v       bool   no      Be slightly more verbose in messages
+-posrefc     real   1000    Force constant for position restraints
+-vsite       enum   none    Convert atoms to virtual sites: none, hydrogens
+                            or aromatics
+-[no]heavyh  bool   no      Make hydrogen atoms heavy
+-[no]deuterate bool no      Change the mass of hydrogens to 2 amu
+
+Opening library file /usr/local/gromacs/share/gromacs/top/ffG43a1.rtp
+Opening library file /usr/local/gromacs/share/gromacs/top/aminoacids.dat
+Opening library file /usr/local/gromacs/share/gromacs/top/aminoacids.dat
+Opening library file /usr/local/gromacs/share/gromacs/top/atommass.dat
+Opening library file /usr/local/gromacs/share/gromacs/top/vdwradii.dat
+Opening library file /usr/local/gromacs/share/gromacs/top/dgsolv.dat
+Opening library file /usr/local/gromacs/share/gromacs/top/electroneg.dat
+Opening library file /usr/local/gromacs/share/gromacs/top/elements.dat
+
+-------------------------------------------------------
+Program pdb2gmx, VERSION 4.0.5
+Source code file: futil.c, line: 330
+
+File input/output error:
+.pdb
+-------------------------------------------------------
+
+"Right Now My Job is Eating These Doughnuts" (Bodycount)
+
+WARNING: masses will be determined based on residue and atom names,
+         this can deviate from the real mass of the atom type
+Entries in atommass.dat: 178
+WARNING: vdwradii will be determined based on residue and atom names,
+         this can deviate from the real mass of the atom type
+Entries in vdwradii.dat: 29
+Entries in dgsolv.dat: 7
+Entries in electroneg.dat: 71
+Entries in elements.dat: 218
+Reading .pdb...
+Option     Filename  Type         Description
+------------------------------------------------------------
+  -f       .mdp.mdp  Input, Opt!  grompp input file with MD parameters
+ -po  /dev/null.mdp  Output       grompp input file with MD parameters
+  -c           .gro  Input        Structure file: gro g96 pdb tpr tpb tpa
+  -r       conf.gro  Input, Opt.  Structure file: gro g96 pdb tpr tpb tpa
+ -rb       conf.gro  Input, Opt.  Structure file: gro g96 pdb tpr tpb tpa
+  -n      index.ndx  Input, Opt.  Index file
+  -p       .top.top  Input        Topology file
+ -pp  processed.top  Output, Opt. Topology file
+  -o           .tpr  Output       Run input file: tpr tpb tpa
+  -t       traj.trr  Input, Opt.  Full precision trajectory: trr trj cpt
+  -e       ener.edr  Input, Opt.  Energy file: edr ene
+
+Option       Type   Value   Description
+------------------------------------------------------
+-[no]h       bool   no      Print help info and quit
+-nice        int    0       Set the nicelevel
+-[no]v       bool   yes     Be loud and noisy
+-time        real   -1      Take frame at or first after this time.
+-[no]rmvsbds bool   yes     Remove constant bonded interactions with virtual
+                            sites
+-maxwarn     int    0       Number of allowed warnings during input processing
+-[no]zero    bool   no      Set parameters for bonded interactions without
+                            defaults to zero instead of generating an error
+-[no]renum   bool   yes     Renumber atomtypes and minimize number of
+                            atomtypes
+
+
+-------------------------------------------------------
+Program grompp, VERSION 4.0.5
+Source code file: futil.c, line: 330
+
+File input/output error:
+.mdp.mdp
+-------------------------------------------------------
+
+"Right Now My Job is Eating These Doughnuts" (Bodycount)
+
+                         :-)  G  R  O  M  A  C  S  (-:
+
+              GROningen Mixture of Alchemy and Childrens' Stories
+
+                            :-)  VERSION 4.0.5  (-:
+
+
+      Written by David van der Spoel, Erik Lindahl, Berk Hess, and others.
+       Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+             Copyright (c) 2001-2008, The GROMACS development team,
+            check out http://www.gromacs.org for more information.
+
+         This program is free software; you can redistribute it and/or
+          modify it under the terms of the GNU General Public License
+         as published by the Free Software Foundation; either version 2
+             of the License, or (at your option) any later version.
+
+                                :-)  grompp  (-:
+
+                         :-)  G  R  O  M  A  C  S  (-:
+
+              GROningen Mixture of Alchemy and Childrens' Stories
+
+                            :-)  VERSION 4.0.5  (-:
+
+
+      Written by David van der Spoel, Erik Lindahl, Berk Hess, and others.
+       Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+             Copyright (c) 2001-2008, The GROMACS development team,
+            check out http://www.gromacs.org for more information.
+
+         This program is free software; you can redistribute it and/or
+          modify it under the terms of the GNU General Public License
+         as published by the Free Software Foundation; either version 2
+             of the License, or (at your option) any later version.
+
+                                :-)  mdrun  (-:
+
+Option     Filename  Type         Description
+------------------------------------------------------------
+  -s           .tpr  Input        Run input file: tpr tpb tpa
+  -o           .trr  Output       Full precision trajectory: trr trj cpt
+  -x       traj.xtc  Output, Opt. Compressed trajectory (portable xdr format)
+-cpi      state.cpt  Input, Opt.  Checkpoint file
+-cpo       .cpt.cpt  Output, Opt! Checkpoint file
+  -c  /dev/null.gro  Output       Structure file: gro g96 pdb
+  -e           .edr  Output       Energy file: edr ene
+  -g  /dev/null.log  Output       Log file
+-dgdl      dgdl.xvg  Output, Opt. xvgr/xmgr file
+-field    field.xvg  Output, Opt. xvgr/xmgr file
+-table    table.xvg  Input, Opt.  xvgr/xmgr file
+-tablep  tablep.xvg  Input, Opt.  xvgr/xmgr file
+-tableb   table.xvg  Input, Opt.  xvgr/xmgr file
+-rerun    rerun.xtc  Input, Opt.  Trajectory: xtc trr trj gro g96 pdb cpt
+-tpi        tpi.xvg  Output, Opt. xvgr/xmgr file
+-tpid   tpidist.xvg  Output, Opt. xvgr/xmgr file
+ -ei        sam.edi  Input, Opt.  ED sampling input
+ -eo        sam.edo  Output, Opt. ED sampling output
+  -j       wham.gct  Input, Opt.  General coupling stuff
+ -jo        bam.gct  Output, Opt. General coupling stuff
+-ffout      gct.xvg  Output, Opt. xvgr/xmgr file
+-devout   deviatie.xvg  Output, Opt. xvgr/xmgr file
+-runav  runaver.xvg  Output, Opt. xvgr/xmgr file
+ -px      pullx.xvg  Output, Opt. xvgr/xmgr file
+ -pf      pullf.xvg  Output, Opt. xvgr/xmgr file
+-mtx         nm.mtx  Output, Opt. Hessian matrix
+ -dn     dipole.ndx  Output, Opt. Index file
+
+Option       Type   Value   Description
+------------------------------------------------------
+-[no]h       bool   no      Print help info and quit
+-nice        int    19      Set the nicelevel
+-deffnm      string         Set the default filename for all file options
+-[no]xvgr    bool   yes     Add specific codes (legends etc.) in the output
+                            xvg files for the xmgrace program
+-[no]pd      bool   no      Use particle decompostion
+-dd          vector 0 0 0   Domain decomposition grid, 0 is optimize
+-npme        int    -1      Number of separate nodes to be used for PME, -1
+                            is guess
+-ddorder     enum   interleave  DD node order: interleave, pp_pme or cartesian
+-[no]ddcheck bool   yes     Check for all bonded interactions with DD
+-rdd         real   0       The maximum distance for bonded interactions with
+                            DD (nm), 0 is determine from initial coordinates
+-rcon        real   0       Maximum distance for P-LINCS (nm), 0 is estimate
+-dlb         enum   auto    Dynamic load balancing (with DD): auto, no or yes
+-dds         real   0.8     Minimum allowed dlb scaling of the DD cell size
+-[no]sum     bool   yes     Sum the energies at every step
+-[no]v       bool   no      Be loud and noisy
+-[no]compact bool   yes     Write a compact log file
+-[no]seppot  bool   no      Write separate V and dVdl terms for each
+                            interaction type and node to the log file(s)
+-pforce      real   -1      Print all forces larger than this (kJ/mol nm)
+-[no]reprod  bool   no      Try to avoid optimizations that affect binary
+                            reproducibility
+-cpt         real   15      Checkpoint interval (minutes)
+-[no]append  bool   no      Append to previous output files when continuing
+                            from checkpoint
+-[no]addpart bool   yes     Add the simulation part number to all output
+                            files when continuing from checkpoint
+-maxh        real   -1      Terminate after 0.99 times this time (hours)
+-multi       int    0       Do multiple simulations in parallel
+-replex      int    0       Attempt replica exchange every # steps
+-reseed      int    -1      Seed for replica exchange, -1 is generate a seed
+-[no]glas    bool   no      Do glass simulation with special long range
+                            corrections
+-[no]ionize  bool   no      Do a simulation including the effect of an X-Ray
+                            bombardment on your system
+
+
+-------------------------------------------------------
+Program mdrun, VERSION 4.0.5
+Source code file: gmxfio.c, line: 736
+
+Can not open file:
+.tpr
+-------------------------------------------------------
+
+"Right Now My Job is Eating These Doughnuts" (Bodycount)
+

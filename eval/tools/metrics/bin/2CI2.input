@@ -1,0 +1,5 @@
+PDBFILE 2CI2.pdb
+VDWFILE /home/lg/cloud/eval/tools/programs/naccess/vdw.radii
+STDFILE /home/lg/cloud/eval/tools/programs/naccess/standard.data
+PROBE 1.40
+ZSLICE 0.05

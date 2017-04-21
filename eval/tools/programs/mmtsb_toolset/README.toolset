@@ -1,0 +1,139 @@
+Molecular Modeling Tools in Structural Biology
+http://mmtsb.org
+
+*** Installation ******
+
+To install, go to the directory where you want to install
+the package (e.g. /usr/local) and unpack with 
+
+   gzip -d <package>.tar.gz
+   tar xvf <package>.tar
+
+This will create all files in the current directory
+
+Now start the installation with
+   
+   ./install.sh 
+
+or 
+   ./install.sh INTEL
+
+Using the optional key INTEL on the command line will use the Intel
+compilers (note that the Intel fortran library libifcore must be directly
+used to enable linking c++ and fortran codes using the icpc and this
+requires the path -L /path_to_intel_fortran_libs/ be set. This will probably
+have to be changed in the Makefile for differing installations.
+
+The default compiler is the GNU compilers, gcc, g++ and gfortran.
+
+After running the installation script compiled binaries are available
+in ./bin and self-starting perl scripts are in ./perl. Related data
+files are in ./data and examples for each perl script are under
+./bench.
+
+*** Setup ******
+
+Every user planning to use the MMTSB tools should set the
+environment variable MMTSBDIR to the directory where the MMTSB
+tools are installed (e.g. /usr/local) and include $MMTSBDIR/bin
+and $MMTSBDIR/perl in the file search path as follows:
+
+For csh/tcsh:
+
+setenv MMTSBDIR <installation-dir>
+set path = ( $path $MMTSBDIR/perl $MMTSBDIR/bin )
+
+and for sh/bash:
+
+export MMTSBDIR = <installation-dir>
+export PATH = $PATH:$MMTSBDIR/perl:$MMTSBDIR/bin
+
+For parallel execution, you may also specify the program
+for remote login without passwords in REMOTESHELL, e.g.:
+
+setenv REMOTESHELL rsh
+
+
+*** Integration with other packages ****
+
+The MMTSB Tool Set benefits from the availability of other
+software packages, in particular CHARMM, Amber, NAMD, Modeller,
+DSSP, SCWRL, NCBI-BLAST, PSIPRED. Note that the Tool Set now works
+with installation of either scwrl3 or scwrl2.5.
+
+To use SCWRL3.x with the Tool Set, unpack the tarball, copy the files
+BBDep.bin and scwrl3_ to the directory $MMTSBDIR/data directory, run the
+setup program that resides in the scwrl3_<os> from the $MMTSBDIR/data 
+directory, and then move the executable scwrl3 to the $MMTSBDIR/bin 
+directory (this is necessary because the path to the BBDep.bin is explicitly
+encoded into scwrl3).
+
+The following environment variables are related to these
+packages and should be set accordingly:
+
+CHARMMEXEC    CHARMM executable
+CHARMMDATA    CHARMM data files
+AMBERHOME     Amber installation directory
+SANDEREXEC    Amber sander executable
+LEAPEXEC      Amber tLeap executable
+NAMDEXEC      NAMD executable
+MODELLEREXEC  Modeller executable
+PSIPREDDIR    PSIPRED installation directory
+PDBDIR        Directory with local copy of PDB 
+
+*** Troubleshooting ***
+
+Perl:
+
+Perl 5.004 or newer is required to run the perl scripts. All perl scripts
+check whether this (or a newer) version is available and and will
+abort with a message if not. /usr/bin/env is used to find the location
+of perl. This works only if perl can be found in the search path. 
+An error like
+
+  env: perl: No such file or directory
+
+indicates that perl is either not installed or its location is not 
+included in the search path. Binary and source code distributions of 
+latest perl versions are available through http://www.cpan.org
+
+
+Compiling:
+
+The provided Makefile by default uses gcc, g++, and gfortran to compile 
+the binaries. If that is not appropriate for your platform
+or special linker options are needed, the file src/Makefile
+needs to be modified accordingly. Please consult your 
+local system administrator if necessary.
+
+Running:
+
+If problems occur with running the scripts or programs please  
+consult the documentation at 
+http://mmtsb.scripps.edu/software/mmtsbtoolset.html
+and check your input data. 
+If problems persist, help is available at the address below.
+
+
+*** Support ********
+
+Send email to 
+
+       mmtsb@mmtsb.org
+
+to request support, report bugs, and provide feedback on modifications
+for currently non-supported architectures.
+
+There is also a discussion form for MMTSB related issue at
+
+http://www.charmm.org
+
+
+*** Citations ******
+
+If you use the MMTSB Tool Set in your research please cite:
+
+Michael Feig, John Karanicolas, Charles L. Brooks III: 
+MMTSB Tool Set: Enhanced Sampling and Multiscale Modeling Methods for Applications in Structural Biology 
+Journal of Molecular Graphics and Modeling (2004) 22, 377-395
+

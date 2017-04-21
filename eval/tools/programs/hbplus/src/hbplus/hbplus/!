@@ -1,0 +1,17 @@
+==> chkqnh.scr <==
+#!/usr/bin/csh
+#CHKQNH script
+#Distributed with HBPLUS
+#Call BRKCLN, ACCESS and HBPLUS and generate a user-friendly output of Asn,
+#Gln and His groups.
+#Input : pdbfilename
+
+##########################################################################
+# Set the stem
+set tail = $1:t
+set stem = $tail:r
+
+# Set EXE_PATH (this usually includes a line inserted from the makefile)
+set EXE_PATH = $0:h
+#
+# insert resetting of EXE_PATH here
