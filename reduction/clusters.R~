@@ -3,18 +3,20 @@
 library (bio3d)
 library (parallel)
 
+nCPUS = 4
 #--------------------------------------------------------------
 # Main function
 #--------------------------------------------------------------
 main <- function () {
 	args = commandArgs (TRUE)
 	#inputDir = args [1]
-	inputDir = "in"
+	inputDir = "in/tmp"
 	inputFullFiles = paste (inputDir, list.files (inputDir), sep="/")
-	outputFullFiles = gsub (".tgz", ".tbl", gsub ("in/", "out/", inputFullFiles))
 
-	print (">>>")
-	print ( inputFullFiles)
+	cat ("\n>>> Input files:\n")
+	cat ( inputFullFiles, sep="\n")
+	cat ("\n>>> Clustering Process\n")
+	#mcmapply (clusteringProcess, inputFullFiles, mc.cores=4)
 	mcmapply (clusteringProcess, inputFullFiles, mc.cores=4)
 }
 
@@ -23,19 +25,20 @@ clusteringProcess <- function (pathname) {
 	#pathname  = args [1]  # Must be as in/1FA01.tgz
 	outFile =  gsub (".tgz", ".tbl", gsub ("in/", "out/", pathname)) 
 
-	cat ("Getting pdb filenames...\n")
+	cat (">>> Getting pdb filenames...\n")
 	files <<- getPDBFiles (pathname)
 
-	cat ("Calculating XYZ Matrix...\n")
+	cat (">>> Calculating XYZ Matrix...\n")
 	xyzMatrix <<- calcXYZMatrix (files$pdbs)
+	write.table (xyzMatrix, file="xyzmat.tbl")
 
-	cat ("Calculating RMSDs..\n")
+	cat (">>> Calculating RMSDs..\n")
 	rmsdDistances <<- calcRMSDsPairwise (files$native, xyzMatrix)
-
-	cat ("Running clustering...")
+#
+	cat (">>> Running clustering...")
 	groups <<- runClustering (rmsdDistances)
-
-	write.table (file=outFile, groups)
+#
+#	write.table (file=outFile, groups)
 }
 
 #--------------------------------------------------------------
@@ -49,8 +52,9 @@ calcXYZMatrix <- function (pdbNames) {
 	#firstPdb <- trim (firstPdb, ca.inds)
 	xyzMatrix = matrix (firstPdb$xyz,nrow=1)
 
-	pdbs <<- mclapply (pdbNames, read.pdb2)
-	#print (pdbs)
+	pdbs <<- mclapply (X=pdbNames, FUN=read.pdb2, mc.cores=nCPUS )
+	print ("End")
+	#pdbs <<- lapply (pdbNames, read.pdb2)
 	for (pdb in pdbs [2:n]) {
 		#pdb = read.pdb2 (pdbName)
 		#ca.inds <- atom.select(pdb, "calpha")
@@ -97,7 +101,6 @@ calcRMSDsPairwise <- function (native, xyzMatrix) {
 }
 
 #--------------------------------------------------------------
-# Get the PDB files from either a compressed file or a dir
 #--------------------------------------------------------------
 getPDBFiles <- function (pathname) {
 	# Extracts to an inputDir 
