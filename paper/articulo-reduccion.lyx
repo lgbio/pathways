@@ -1,0 +1,186 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Reducción de Trajectorias de Plegamiento de Proteína a través de la Agrupación
+ de Pasos de Tiempo
+\end_layout
+
+\begin_layout Section
+Resumen
+\end_layout
+
+\begin_layout Standard
+El análisis de las trayectorías de dinámica molecular para proteínas es
+ de gran importancia ya que nos muestra como la proteína cambia durante
+ su proceso de plegamiento.
+ Generalmente, las simulaciones muestran como una proteína inicia en un
+ estado no-plegado
+\emph on
+ 
+\emph default
+y a través de distintas transformaciones durante el tiempo de su plegamiento,
+ esta alcanza un estado más estable (
+\emph on
+estado nativo).
+
+\emph default
+ En este trabajo implementamos distintas técnicas para reducir los pasos
+ de tiempo de los datos provenientes de las simulación con dinámica molecur
+ del plegamiento de proteínas.
+ Los resultados de las distintas técnicas se comparan mediante dos métodos:
+ uno donde se calculan y muestran los puntos críticos de las trayectorias
+ resultantes; y otro donde se calcula la dimensión fractal de las trayectorías.
+ El objetivo al final es obtener la trayectoria reducida más representativa
+ de tal manera que el número de pasos de tiempo se haya reducido considerablemen
+te y por lo tanto los análisis se puedan llevar a cabo más rápidamente.
+\end_layout
+
+\begin_layout Section
+Introducción
+\end_layout
+
+\begin_layout Subsection
+Background y Estado del Arte
+\end_layout
+
+\begin_layout Subsubsection
+Trajectorias de Proteínas
+\end_layout
+
+\begin_layout Itemize
+Trayectorias de Anton
+\end_layout
+
+\begin_layout Subsubsection
+Reducción de la dimensionalidad para trayectorias de proteínas
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Corto análisis de lo que presentan los siguientes artículos y que tienen
+ o que no tienen frente a las técnicas que planteamos.
+ Esencialmente, estos trabajos reducen la dimensionalidad capturando característ
+icas relevantes de las trayectorías pero sin buscar preservar la forma en
+ que se lleva el plegamiento, es decir, obtienen los momentos más relevantes
+ mientras que nosotros buscamos que la trayectoría reducida conserve en
+ lo posible los eventos que la caracterízan tales como los momentos donde
+ la proteína se pliega y se vuelve a desplegar (mínimos y máximos en los
+ puntos críticos).
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Rajan, A., Freddolino, P.
+ L., & Schulten, K.
+ (2010).
+ Going beyond clustering in MD trajectory analysis: An application to villin
+ headpiece folding.
+ PLoS ONE, 5(4), e9890.
+ http://doi.org/10.1371/journal.pone.0009890
+\end_layout
+
+\begin_layout Itemize
+Eitrich, T., Mohanty, S., Xiao, X., & Hansmann, U.
+ H.
+ E.
+ (2007).
+ Dimensionality Reduction Techniques for Protein Folding Trajectories.
+ From Computational Biophysics to Systems Biology (CBSB07), 36, 99–102.
+\end_layout
+
+\begin_layout Itemize
+Plaku, E., Stamati, H., Clementi, C., & Kavraki, L.
+ E.
+ (2007).
+ Fast and reliable analysis of molecular motion using proximity relations
+ and dimensionality reduction.
+ Proteins: Structure, Function, and Bioinformatics, 67(4), 897–907.
+\end_layout
+
+\begin_layout Section
+Resultados
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document

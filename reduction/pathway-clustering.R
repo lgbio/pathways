@@ -62,7 +62,8 @@ pairwiseDistancesRMSDs <- function (pdbObjects) {
 	xyz <- fit.xyz (fixed = firstPdb$xyz, mobile = xyzMatrix, 
 		fixed.inds = ca.inds$xyz, mobile.inds = ca.inds$xyz, ncore=nCPUS)
 
-	rmsdDistances <- as.dist (rmsd (xyz, a.inds=ca.inds$xyz, ncore=nCPUS))
+	rmsdDistances <- as.dist (rmsf (xyz, average=T))
+	#rmsdDistances <- as.dist (rmsd (xyz, a.inds=ca.inds$xyz, ncore=nCPUS))
 	#rd <- rmsd (xyz[1,], xyz, a.inds=ca.inds$xyz, ncore=nCPUS)
 	#rownames (rd) = rownames (xyzMatrix)
 

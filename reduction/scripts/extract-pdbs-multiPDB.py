@@ -2,8 +2,7 @@
 
 """
  Get from a multipdb (separated by "END") the range of Pdbs,
- complete aminos, and make with the resultinf files a .tgz file. i
- At the end put the native 2FK4-nle.pdb
+ complete aminos, and make with the resultinf files a .tgz file.
 """
 """
 LOG:

@@ -1,8 +1,5 @@
 #!/usr/bin/Rscript
 
-# Reduces a protein folding trajectory by three
-# methods: medoids, static and random
-
 library (bio3d)
 library (parallel)
 library (cluster)
@@ -18,85 +15,43 @@ tmpDir = "/dev/shm"
 # Main function
 #--------------------------------------------------------------
 main <- function (args) {
-	#args = c("shm/2YCC", "40")
+	#args = c("shm/1FCA1", "1000")
 	if (length (args) < 1) {
 		cat (USAGE)
 		quit ()
 	}
 	inputPathname  = args [1]
 	sizeMedoids    = strtoi (args [2])
-	outputDir      = getwd ()
 	if (length (args) > 2) 
 		outputDir      = args [3]
+	else
+		outputDir      = getwd ()
 
 	cat (">>> Splitting Files into bins...\n")
 	binDirList = splitFilesToBins (inputPathname, sizeMedoids, tmpDir)
 
-	#cat (">>> Calculating medoids...\n")
-	#medoidsReduction (binDirList, outputDir)
-
-	cat (">>> Random reduction...\n")
-	randomReduction (binDirList, outputDir)
-}
-
-#--------------------------------------------------------------
-# Get a random structure for each bin from the "binDirList"
-# and write results to the "outputDir"
-#--------------------------------------------------------------
-randomReduction <- function (binDirList, outputDir) {
-	randomDir =  sprintf ("%s/%s", outputDir, "random")
-	createDir (randomDir)
-	for (binDir in binDirList) {
-		pdbs = list.files (binDir)
-		n = length (pdbs)
-		centerPdb = pdbs [sample (1:n, 1)]
-		pdbFilename = sprintf ("%s/%s", binDir, centerPdb)
-		system (sprintf ("cp %s %s", pdbFilename, randomDir)) 
-	}
-}
-
-
-#--------------------------------------------------------------
-# Get the center structure for each bin from the "binDirList"
-# and write results to the "outputDir"
-#--------------------------------------------------------------
-staticReduction <- function (binDirList, outputDir) {
-	staticDir =  sprintf ("%s/%s", outputDir, "static")
-	createDir (staticDir)
-	for (binDir in binDirList) {
-		pdbs = list.files (binDir)
-		n = length (pdbs)
-		centerPdb = pdbs [ceiling (n / 2)]
-		pdbFilename = sprintf ("%s/%s", binDir, centerPdb)
-		system (sprintf ("cp %s %s", pdbFilename, staticDir)) 
-	}
-}
-
-#--------------------------------------------------------------
-# Calculate the medoids for each bin of the "binDirList"
-# and write results to the "outputDir"
-#--------------------------------------------------------------
-medoidsReduction <- function (binDirList, outputDir) {
-	medoidsList <- mclapply (X=binDirList, FUN=medoidsFromBin, mc.cores=nCPUS )
-
 	medoidsDir =  sprintf ("%s/%s", outputDir, "medoids")
 	createDir (medoidsDir)
-
-	for (medoid in medoidsList) {
+	cat (">>> Creating medoids...\n")
+	for (binDir in binDirList) {
+		medoid = medoidsFromBin (binDir)
 		system (sprintf ("cp %s %s/%s", medoid, outputDir, "medoids"))
 	}
 }
+
 #--------------------------------------------------------------
 #--------------------------------------------------------------
 medoidsFromBin <- function (binDir) {
 	outputGroups   = paste (binDir, ".groups", sep="")
 	outputMedoids  = paste (binDir, ".medoids", sep="")
 
-	cat ("Medoids from..", binDir, "\n")
-	pdbObjects <- getPDBFiles (binDir)
+	cat (">>> Loading pdb filenames...\n")
+	pdbObjects <<- getPDBFiles (binDir)
 
+	cat ("\n>>> Clustering PDBs...\n")
 	results = clusteringPDBs (pdbObjects)
 
+	cat ("\n>>> Writing Results...\n")
 	write.table (file=outputGroups, results$groups)
 	write.table (file=outputMedoids, results$medoids)
 
@@ -106,9 +61,10 @@ medoidsFromBin <- function (binDir) {
 
 #--------------------------------------------------------------
 clusteringPDBs <- function (pdbObjects) {
-	rmsdDistances <- pairwiseDistancesRMSDs (pdbObjects)
+	cat ("   >>> Calculating RMSD Distances...\n")
+	rmsdDistances <<- pairwiseDistancesRMSDs (pdbObjects)
 
-	pamPDBs <- pam (rmsdDistances, 1, diss=T)
+	pamPDBs <<- pam (rmsdDistances, 1, diss=T)
 	groups  <- pamPDBs$clustering
 	medoids <- pamPDBs$medoids
 
@@ -121,33 +77,63 @@ clusteringPDBs <- function (pdbObjects) {
 #--------------------------------------------------------------
 pairwiseDistancesRMSDs <- function (pdbObjects) {
 	pdbs = pdbObjects$pdbs
-	pdb = pdbs [[1]]
-	CAs <- atom.select (pdb, elety="CA", verbose=FALSE)
-	firstPdb = pdb$xyz[CAs$xyz]
-
+	firstPdb = pdbs [[1]]
 	n = length (pdbObjects$pdbs)
 
 	# Calculate matrix of coordinates xyz
-	xyzMatrix <- matrix (firstPdb,nrow=1)
+	xyzMatrix <- matrix (firstPdb$xyz,nrow=1)
 	for (pdb in pdbs [2:n]) {
-		CAs = atom.select (pdb, elety="CA", verbose=FALSE)
-		pdb = pdb$xyz[CAs$xyz]
-		xyzMatrix = rbind (xyzMatrix, n1=pdb)
+		xyzMatrix = rbind (xyzMatrix, n1=pdb$xyz)
 	}
 	rownames (xyzMatrix) <- names (pdbObjects$pdbs)
 
 	# Calculate RMSDs
-	xyz <- fit.xyz (fixed = firstPdb, mobile = xyzMatrix, ncore=nCPUS)
+	# Trajectory Frame Superposition on Calpha atoms
+	ca.inds <- atom.select(firstPdb, "calpha")
+	xyz <- fit.xyz (fixed = firstPdb$xyz, mobile = xyzMatrix, 
+		fixed.inds = ca.inds$xyz, mobile.inds = ca.inds$xyz, ncore=nCPUS)
 
-	rmsdDistances <- as.dist (rmsd (xyz, ncore=nCPUS))
+	#rmsdDistances <- as.dist (rmsf (xyz, average=T))
+	rmsdDistances <- as.dist (rmsd (xyz, a.inds=ca.inds$xyz, ncore=nCPUS))
+	#rd <- rmsd (xyz[1,], xyz, a.inds=ca.inds$xyz, ncore=nCPUS)
+	#rownames (rd) = rownames (xyzMatrix)
 
 	return (rmsdDistances)
+}
+#--------------------------------------------------------------
+# Calculate matrix of XYZ
+#--------------------------------------------------------------
+calcXYZMatrix <- function (pdbObjects, native) {
+	n = length (pdbObjects)
+
+	xyzMatrix = matrix (native$xyz,nrow=1)
+	for (pdb in pdbObjects [2:n]) {
+		xyzMatrix = rbind (xyzMatrix, n1=pdb$xyz)
+	}
+	rownames (xyzMatrix) <- names (pdbObjects)
+	return (xyzMatrix)
+}
+
+#--------------------------------------------------------------
+# Get RMSDs between each pair of protein structures
+#--------------------------------------------------------------
+calcRMSDsPairwise <- function (native, xyzMatrix) {
+	# Trajectory Frame Superposition on Calpha atoms
+	ca.inds <<- atom.select(native, "calpha")
+	xyz <<- fit.xyz (fixed = native$xyz, mobile = xyzMatrix, 
+		fixed.inds = ca.inds$xyz, mobile.inds = ca.inds$xyz, ncore=1)
+
+	rd <- rmsd (xyz, a.inds=ca.inds$xyz, ncore=nCPUS)
+	rownames (rd) = rownames (xyzMatrix)
+
+	return (rd)
 }
 
 #--------------------------------------------------------------
 # Load pdb files to pdb objects
 #--------------------------------------------------------------
 getPDBFiles <- function (pathname) {
+	cat ("\n\n>>>path ", pathname, "\n")
 	# Extracts to an pathname 
 	if (grepl ("gz", pathname)==T) {
 		stemName = strsplit (pathname, split="[.]")[[1]][1]
@@ -176,6 +162,7 @@ log <- function (object, dwfilename) {
 	print (object)
 	sink()
 }
+
 #--------------------------------------------------------------
 # Call main function
 #--------------------------------------------------------------

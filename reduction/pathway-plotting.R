@@ -8,7 +8,7 @@ MC_CORES=4
 # Creates a .pdf plot for a protein trajectory o pathway
 # The input is either a compressed (.tgz) trajectory or
 # a directory name with the PDBs files inside it.
-USAGE="plot-pathway.R <compressed pathway filename | input directory>\n"
+USAGE="plot-pathway.R <input pathway dir> [output dir]\n"
 #--------------------------------------------------------------
 # Main function
 #--------------------------------------------------------------
@@ -19,19 +19,23 @@ main <- function () {
 		quit ()
 	}
 	pathname  = args [1]
-	filenames = getInOutNames (pathname)
+	outputDir = getwd ()
+	if (length (args) == 2)
+		outputDir = args [2]
+
+	filenames = getInOutNames (pathname, outputDir)
 	pathname = filenames$inputDir
 	outputFile = filenames$outputFile
 
 	# Extract or load filename to calculate RMSDs
+	cat ("\nLoading PDBs...\n")
 	files = getPDBFiles (pathname)
 	
+	cat ("\nCalculating RMSDs...")	
 	rmsdValues = parallerRmsdPathway (files$n, files$native, files$pdbs)
 
+	cat ("\nWriting output file ", outputFile, "\n")
 	plotPathway (rmsdValues, outputFile)
-
-	# Plot for the original pathway values
-	#plotPathway (rmsdValues, files$outfile)
 }
 
 #--------------------------------------------------------------
@@ -56,14 +60,11 @@ rmsdPathway <- function (n, native, pdbs) {
 # Calculate the RMSD between two protein structures
 #--------------------------------------------------------------
 calculateRMSD <- function (pdbNameTarget, pdbNameRef) {
-	print (sprintf ("%s, %s\n", pdbNameTarget, pdbNameRef))
 	#--- Obtain the stem pathname of the compared protein (pdbNameRef)
 	proteinTargetFilename = unlist (strsplit (pdbNameTarget, "\\."))[1]
 
 	target <- read.pdb2 (pdbNameTarget, rm.alt=FALSE, verbose=FALSE)
 	reference <- read.pdb2 (pdbNameRef, rm.alt=FALSE, verbose=FALSE)
-	lenAtomsTarget <- length (target$atom[,1])
-	lenAtomsReference <- length (reference$atom[,1])
 
 	targetCAs <- atom.select (target, elety="CA", verbose=FALSE)
 	referenceCAs <- atom.select (reference, elety="CA", verbose=FALSE)
@@ -84,6 +85,9 @@ plotPathway <- function (rmsdValues, outputFile) {
 		time = 1:(n-1)
 		plot(time, rd, typ = "l", ylab = "RMSD", xlab = "Frame No.")
 		points (lowess(time,rd, f=2/10), typ="l", col="red", lty=2, lwd=2)
+		#steps = n / 21
+		#xPoints = seq (0,n, ceiling (steps))
+		#axis (side=1, xPoints)
 	dev.off ()
 }
 
@@ -110,15 +114,13 @@ getPDBFiles <- function (pathname) {
 
 #--------------------------------------------------------------
 #--------------------------------------------------------------
-getInOutNames <- function (pathname) {
-	if (grepl ("gz", pathname)==T) {
-		stemName = strsplit (pathname, split="[.]")[[1]][1]
-		inputDir = stemName 
-		outputFile = paste (stemName, ".pdf", sep="")
-	} else { 
+getInOutNames <- function (pathname, outputDir) {
+	if (grepl ("gz", pathname)==T) 
+		inputDir = strsplit (pathname, split="[.]")[[1]][1]
+	else  
 		inputDir = pathname
-		outputFile = paste (pathname, ".pdf", sep="")
-	}
+
+	outputFile = sprintf ("%s/%s.pdf", outputDir, basename (inputDir))
 	return (list (inputDir=inputDir, outputFile=outputFile))
 }
 #--------------------------------------------------------------

@@ -19,8 +19,8 @@ rmsdFilename = paste (proteinTargetFilename, "", ".rmsd", sep="")
 if (length (args) == 3)
 	rmsdFilename <- args [3]
 
-target <- read.pdb (proteinTarget, rm.alt=FALSE, verbose=FALSE)
-reference <- read.pdb (proteinReference, rm.alt=FALSE, verbose=FALSE)
+target <- read.pdb2 (proteinTarget, rm.alt=FALSE, verbose=FALSE)
+reference <- read.pdb2 (proteinReference, rm.alt=FALSE, verbose=FALSE)
 lenAtomsTarget <- length (target$atom[,1])
 lenAtomsReference <- length (reference$atom[,1])
 
