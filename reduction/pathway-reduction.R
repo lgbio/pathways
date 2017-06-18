@@ -10,7 +10,7 @@ library (cluster)
 source ("libs/createDir.R")
 source ("libs/splitFilesToBins.R")
 
-nCPUS = 4
+nCPUS = 15
 USAGE = "USAGE: medoids.R <input dir> <output dir> <size chunks>\n"
 options (width=400)
 tmpDir = "/dev/shm"
@@ -32,12 +32,16 @@ main <- function (args) {
 	cat (">>> Splitting Files into bins...\n")
 	binDirList = splitFilesToBins (inputPathname, sizeMedoids, tmpDir)
 
-	#cat (">>> Calculating medoids...\n")
-	#medoidsReduction (binDirList, outputDir)
+	cat (">>> Calculating static...\n")
+	staticReduction (binDirList, outputDir)
 
 	cat (">>> Random reduction...\n")
 	randomReduction (binDirList, outputDir)
+
+	cat (">>> Calculating medoids...\n")
+	medoidsReduction (binDirList, outputDir)
 }
+
 
 #--------------------------------------------------------------
 # Get a random structure for each bin from the "binDirList"
@@ -162,8 +166,8 @@ getPDBFiles <- function (pathname) {
 	native = pdbNamesFull [[n]]
 
 	# Load PDB Objects
-	nativeObject <<- read.pdb2 (native)
-	pdbObjects <<- mclapply (X=pdbNamesFull, FUN=read.pdb2, mc.cores=nCPUS )
+	nativeObject <<- read.pdb (native)
+	pdbObjects <<- mclapply (X=pdbNamesFull, FUN=read.pdb, mc.cores=nCPUS )
 	
 	return (list (n=n, native=nativeObject, pdbs=pdbObjects))
 }

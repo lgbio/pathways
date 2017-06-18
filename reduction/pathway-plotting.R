@@ -63,8 +63,8 @@ calculateRMSD <- function (pdbNameTarget, pdbNameRef) {
 	#--- Obtain the stem pathname of the compared protein (pdbNameRef)
 	proteinTargetFilename = unlist (strsplit (pdbNameTarget, "\\."))[1]
 
-	target <- read.pdb2 (pdbNameTarget, rm.alt=FALSE, verbose=FALSE)
-	reference <- read.pdb2 (pdbNameRef, rm.alt=FALSE, verbose=FALSE)
+	target <- read.pdb (pdbNameTarget, rm.alt=FALSE, verbose=FALSE)
+	reference <- read.pdb (pdbNameRef, rm.alt=FALSE, verbose=FALSE)
 
 	targetCAs <- atom.select (target, elety="CA", verbose=FALSE)
 	referenceCAs <- atom.select (reference, elety="CA", verbose=FALSE)
