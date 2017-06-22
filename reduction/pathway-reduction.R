@@ -10,8 +10,8 @@ library (cluster)
 source ("libs/createDir.R")
 source ("libs/splitFilesToBins.R")
 
-nCPUS = 15
-USAGE = "USAGE: medoids.R <input dir> <output dir> <size chunks>\n"
+nCPUS = 4
+USAGE = "USAGE: pathway-medoids.R <input dir> <split size> [output dir] \n"
 options (width=400)
 tmpDir = "/dev/shm"
 #--------------------------------------------------------------
@@ -19,7 +19,7 @@ tmpDir = "/dev/shm"
 #--------------------------------------------------------------
 main <- function (args) {
 	#args = c("shm/2YCC", "40")
-	if (length (args) < 1) {
+	if (length (args) < 2) {
 		cat (USAGE)
 		quit ()
 	}
